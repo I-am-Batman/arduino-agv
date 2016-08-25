@@ -33,9 +33,8 @@ int ping(){
 void loop(){
   rside.write(FORWARD);
 
-  if(ping() < 10){
+  if((int) ping() < 10){
     rside.writeMicroseconds(STOP);
     delay(5);
   }
 }
-
