@@ -8,7 +8,6 @@ Servo rside;
 Servo lside;
 const int pingPin = 2;
 
-
 void setup(){
   rside.attach(12);
 }
@@ -25,20 +24,18 @@ int ping(){
   digitalWrite(pingPin, HIGH);
   delayMicroseconds(5);
   digitalWrite(pingPin, LOW);
-
   pinMode(pingPin, INPUT);
   duration = pulseIn(pingPin, HIGH);
-
   inches = microsecondsToInches(duration);
   return inches;
 }
 
 void loop(){
   rside.write(FORWARD);
-  delay(5);
 
   if(ping() < 10){
     rside.writeMicroseconds(STOP);
     delay(5);
   }
 }
+

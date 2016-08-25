@@ -7,6 +7,10 @@
 Servo rside;
 Servo lside;
 
+void stopToMaxFor(Servo s){
+  for(int i=1500; i<=2000; i++) s.write(i);
+}
+
 void setup(){
   rside.attach(12);
 }
@@ -20,3 +24,4 @@ void loop(){
   lside.write(STOP);
   delay(10);
 }
+
