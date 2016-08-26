@@ -1,3 +1,5 @@
+//test photoresister
+
 int lightPin = 0;
 int ledPin = 11;
 
