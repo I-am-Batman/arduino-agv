@@ -8,15 +8,15 @@ void setup()
 {
   pinMode(irSensorPin, INPUT);
   pinMode(irLedPin, OUTPUT);
-  Serial.begin(9600); 
-  // prints title with ending line break 
-  Serial.println("Program Starting"); 
-  // wait for the long string to be sent 
-  delay(100); 
+  Serial.begin(9600);
+  // prints title with ending line break
+  Serial.println("Program Starting");
+  // wait for the long string to be sent
+  delay(100);
 }
 
 void loop()
-{  
+{
   Serial.println(irRead(irSensorPin, irLedPin)); //display the results
   delay(10); //wait for the string to be sent
 }
@@ -35,11 +35,10 @@ int irRead(int readPin, int triggerPin)
   int i;
   for (i=0; i <=cycles; i++)
   {
-    digitalWrite(triggerPin, HIGH); 
+    digitalWrite(triggerPin, HIGH);
     delayMicroseconds(halfPeriod);
-    digitalWrite(triggerPin, LOW); 
-    delayMicroseconds(halfPeriod - 1);     // - 1 to make up for digitaWrite overhead    
+    digitalWrite(triggerPin, LOW);
+    delayMicroseconds(halfPeriod - 1);     // - 1 to make up for digitaWrite overhead
   }
   return digitalRead(readPin);
 }
-
