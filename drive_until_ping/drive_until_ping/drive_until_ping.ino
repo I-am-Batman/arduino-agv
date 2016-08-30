@@ -35,7 +35,7 @@ void loop(){
   inches = microsecondsToInches(duration);
 
   Serial.print(inches);
-  Serial.print("in, ");
+  Serial.print("in");
   Serial.println();
 
   delay(100);

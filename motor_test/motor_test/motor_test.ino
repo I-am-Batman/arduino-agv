@@ -2,7 +2,7 @@
 
 #include <Servo.h>
 
-#define FORWARD 1 000
+#define FORWARD 1000
 #define BACKWARD 2000
 #define STOP 1500
 
