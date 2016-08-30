@@ -2,17 +2,13 @@
 
 #include <Servo.h>
 
-#define FORWARD 1000
-#define BACKWARD 2000
+#define FORWARD 2000
+#define BACKWARD 1000
 #define STOP 1500
 
 Servo rside;
 Servo lside;
 
-void stopToMaxFor(Servo s){
-  for(int i=1500; i<=FORWARD; i++) s.writeMicroseconds(i);
-  s.writeMicroseconds(FORWARD);
-}
 
 void setup(){
   rside.attach(12);
