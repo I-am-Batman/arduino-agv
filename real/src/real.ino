@@ -9,7 +9,8 @@
 Servo rside;
 Servo lside;
 const int sideSwitch = 7;
-const int pingPin = 2;
+const int frontPing = 2;
+const int sidePing = 11;
 bool side = true; //left wall false, right wall true
                   //if we start on the left wall, plug pin7 into 5V
 
@@ -100,11 +101,7 @@ void rUTurn(){
   delay(1000);
 }
 
-void loop(){
-  rside.writeMicroseconds(FORWARD-300);
-  lside.writeMicroseconds(FORWARD-300);
-  delay(15);
-
+long ping(int pingPin){
   long duration, inches;
 
   pinMode(pingPin, OUTPUT);
@@ -118,29 +115,60 @@ void loop(){
   duration = pulseIn(pingPin, HIGH);
 
   inches = microsecondsToInches(duration);
+  return inches;
+}
 
-  Serial.print(inches);
+void navigateRight(){
+  turnRight();
+  rside.writeMicroseconds(FORWARD-300);
+  lside.writeMicroseconds(FORWARD-300);
+  delay(15);
+  delay(1000);
+  turnLeft();
+  rside.writeMicroseconds(FORWARD-300);
+  lside.writeMicroseconds(FORWARD-300);
+  delay(15);
+  delay(3000);
+  turnLeft();
+  rside.writeMicroseconds(FORWARD-300);
+  lside.writeMicroseconds(FORWARD-300);
+  delay(15);
+  delay(1000);
+  turnRight();
+}
+
+void returnToWall(){
+  turnLeft();
+  rside.writeMicroseconds(FORWARD-300);
+  lside.writeMicroseconds(FORWARD-300);
+  delay(15);
+  while(ping(frontPing) > 6) {}
+  rside.writeMicroseconds(STOP);
+  lside.writeMicroseconds(STOP);
+  delay(15);
+  turnRight();
+}
+
+void loop(){
+  rside.writeMicroseconds(FORWARD-300);
+  lside.writeMicroseconds(FORWARD-300);
+  delay(15);
+
+  long frontDis = ping(frontPing);
+  long sideDis = ping(sidePing);
+
+  Serial.print(frontDis);
   Serial.print("in");
   Serial.println();
 
   delay(100);
 
-  if(inches <= 15){
-    turnRight();
-    rside.writeMicroseconds(FORWARD-300);
-    lside.writeMicroseconds(FORWARD-300);
-    delay(15);
-    delay(1000);
-    turnLeft();
-    rside.writeMicroseconds(FORWARD-300);
-    lside.writeMicroseconds(FORWARD-300);
-    delay(15);
-    delay(3000);
-    turnLeft();
-    rside.writeMicroseconds(FORWARD-300);
-    lside.writeMicroseconds(FORWARD-300);
-    delay(15);
-    delay(1000);
-    turnRight();
+  if(frontDis <= 15){
+    navigateRight();
+    sideDis = ping(sidePing);
+  }
+
+  if(sideDis >= 20 && sideDis < 60){
+    returnToWall();
   }
 }
