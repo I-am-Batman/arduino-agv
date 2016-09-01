@@ -8,6 +8,8 @@
 Servo rside;
 Servo lside;
 int turn = 0;
+int lightR = 0;
+int lightL = 1;
 const int sideSwitch = 7;
 const int frontPing = 2;
 const int sidePing = 11;
@@ -126,12 +128,9 @@ void navigateRight(){
   lside.writeMicroseconds(FORWARD-300);
   delay(15);
   delay(3000);
-  turnLeft();
-  rside.writeMicroseconds(FORWARD-300);
-  lside.writeMicroseconds(FORWARD-300);
-  delay(15);
-  delay(1000);
-  turnRight();
+  rside.writeMicroseconds(STOP);
+  lside.writeMicroseconds(STOP);
+  returnToWall();
 }
 
 void returnToWall(){
@@ -139,10 +138,12 @@ void returnToWall(){
   rside.writeMicroseconds(FORWARD-300);
   lside.writeMicroseconds(FORWARD-300);
   delay(15);
-  while(ping(frontPing) > 6) {}
-  rside.writeMicroseconds(STOP);
-  lside.writeMicroseconds(STOP);
-  delay(15);
+  long frontDis = ping(frontPing);
+  while(frontDis > 6){
+    Serial.print("Front is: ");
+    Serial.println(frontDis);
+    frontDis = ping(frontPing);
+  }
   rside.writeMicroseconds(STOP);
   lside.writeMicroseconds(STOP);
   delay(15);
@@ -150,7 +151,7 @@ void returnToWall(){
   rside.writeMicroseconds(BACKWARD+400);
   lside.writeMicroseconds(FORWARD-400);
   delay(15);
-  delay(1900);
+  delay(2050);
   rside.writeMicroseconds(STOP);
   lside.writeMicroseconds(STOP);
   delay(15);
@@ -158,14 +159,26 @@ void returnToWall(){
 }
 
 void lightNav(){
+<<<<<<< HEAD
+  Serial.println("Light Hit!");
 	while(lightR != lightR){
 		if(lightL > lightR){
+      Serial.println("Turning Left");
+      
+=======
+	while(lightR != lightR){
+		if(lightL > lightR){
+>>>>>>> f0b43dacd993f0684652ba8f3874d4fc9cf23169
 			lside.writeMicroseconds(BACKWARD);
 			rside.writeMicroseconds(FORWARD);
 			delay(15);
 			delay(100);
 			}
 		else{
+<<<<<<< HEAD
+      Serial.println("Turning ")
+=======
+>>>>>>> f0b43dacd993f0684652ba8f3874d4fc9cf23169
 			lside.writeMicroseconds(FORWARD);
 			rside.writeMicroseconds(BACKWARD);
 			delay(15);
@@ -181,7 +194,11 @@ void lightNav(){
 		rside.writeMicroseconds(STOP);
 		lside.writeMicroseconds(STOP);
 		delay(15);
+<<<<<<< HEAD
+	}
+=======
 	}      
+>>>>>>> f0b43dacd993f0684652ba8f3874d4fc9cf23169
     delay(15);
     while(true){}
 }
@@ -200,7 +217,6 @@ void loop(){
 
   if(frontDis <= 15){
     navigateRight();
-    sideDis = ping(sidePing);
   }
 
   if(sideDis >= 20 && sideDis < 30){
@@ -208,12 +224,12 @@ void loop(){
   }
 
   if(sideDis >= 30){
-    delay(500);
+    delay(1000);
     turnLeft();
-    rside.writeMicroseconds(FORWARD-300);
-    lside.writeMicroseconds(FORWARD-300);
+    rside.writeMicroseconds(FORWARD-400);
+    lside.writeMicroseconds(FORWARD-400);
     delay(15);
-    delay(700);
+    delay(1500);
     turn += 1;
   }
 
