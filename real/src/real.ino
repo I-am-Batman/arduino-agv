@@ -8,6 +8,8 @@
 Servo rside;
 Servo lside;
 int turn = 0;
+int irSensorPin = 6;
+int irLedPin = 4;
 int lightR = 0;
 int lightL = 1;
 const int sideSwitch = 7;
@@ -19,6 +21,8 @@ bool side = true; //left wall false, right wall true
 void setup(){
   rside.attach(12);
   lside.attach(10);
+  pinMode(irSensorPin, INPUT);
+  pinMode(irLedPin, OUTPUT);
   pinMode(sideSwitch, INPUT);
   Serial.begin(9600);
   side = digitalRead(sideSwitch);
@@ -26,6 +30,19 @@ void setup(){
 
 long microsecondsToInches(long microseconds) {
   return microseconds / 74 / 2;
+}
+
+int irRead(){
+  int halfPeriod = 13;
+  int cycles = 38;
+  int i;
+  for (i=0; i <=cycles; i++){
+    digitalWrite(irLedPin, HIGH);
+    delayMicroseconds(halfPeriod);
+    digitalWrite(irLedPin, LOW);
+    delayMicroseconds(halfPeriod - 1);     // - 1 to make up for digitaWrite overhead
+  }
+  return digitalRead(irSensorPin);
 }
 
 void backup(){
@@ -159,26 +176,19 @@ void returnToWall(){
 }
 
 void lightNav(){
-<<<<<<< HEAD
   Serial.println("Light Hit!");
 	while(lightR != lightR){
 		if(lightL > lightR){
       Serial.println("Turning Left");
-      
-=======
 	while(lightR != lightR){
 		if(lightL > lightR){
->>>>>>> f0b43dacd993f0684652ba8f3874d4fc9cf23169
 			lside.writeMicroseconds(BACKWARD);
 			rside.writeMicroseconds(FORWARD);
 			delay(15);
 			delay(100);
 			}
 		else{
-<<<<<<< HEAD
       Serial.println("Turning ")
-=======
->>>>>>> f0b43dacd993f0684652ba8f3874d4fc9cf23169
 			lside.writeMicroseconds(FORWARD);
 			rside.writeMicroseconds(BACKWARD);
 			delay(15);
@@ -194,13 +204,33 @@ void lightNav(){
 		rside.writeMicroseconds(STOP);
 		lside.writeMicroseconds(STOP);
 		delay(15);
-<<<<<<< HEAD
 	}
-=======
-	}      
->>>>>>> f0b43dacd993f0684652ba8f3874d4fc9cf23169
+	}
     delay(15);
     while(true){}
+}
+
+void branchRight(){
+  backup();
+  turnRight();
+  rside.writeMicroseconds(FORWARD-300);
+  lside.writeMicroseconds(FORWARD-300);
+  delay(15);
+  while(!irRead()) {}
+  rside.writeMicroseconds(STOP);
+  lside.writeMicroseconds(STOP);
+  delay(15);
+  backup();
+  turnRight();
+  delay(3000);
+  rside.writeMicroseconds(FORWARD-300);
+  lside.writeMicroseconds(FORWARD-300);
+  delay(15);
+  delay(3000);
+  rside.writeMicroseconds(STOP);
+  lside.writeMicroseconds(STOP);
+  delay(15);
+  while(true) {}
 }
 
 void loop(){
@@ -214,6 +244,10 @@ void loop(){
   Serial.print(frontDis);
   Serial.print("in");
   Serial.println();
+
+  if(irRead()){
+    branchRight();
+  }
 
   if(frontDis <= 15){
     navigateRight();
