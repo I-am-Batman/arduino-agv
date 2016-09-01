@@ -19,8 +19,8 @@ bool side = true; //left wall false, right wall true
                   //if we start on the left wall, plug pin7 into 5V
 
 void setup(){
-  rside.attach(12);
-  lside.attach(10);
+  rside.attach(12, 1000, 2000);
+  lside.attach(10, 1000, 2000);
   pinMode(irSensorPin, INPUT);
   pinMode(irLedPin, OUTPUT);
   pinMode(sideSwitch, INPUT);
@@ -179,16 +179,13 @@ void lightNav(){
   Serial.println("Light Hit!");
 	while(lightR != lightR){
 		if(lightL > lightR){
-      Serial.println("Turning Left");
-	while(lightR != lightR){
-		if(lightL > lightR){
 			lside.writeMicroseconds(BACKWARD);
 			rside.writeMicroseconds(FORWARD);
 			delay(15);
 			delay(100);
 			}
 		else{
-      Serial.println("Turning ")
+      Serial.println("Turning ");
 			lside.writeMicroseconds(FORWARD);
 			rside.writeMicroseconds(BACKWARD);
 			delay(15);
@@ -204,7 +201,6 @@ void lightNav(){
 		rside.writeMicroseconds(STOP);
 		lside.writeMicroseconds(STOP);
 		delay(15);
-	}
 	}
     delay(15);
     while(true){}
@@ -245,15 +241,18 @@ void loop(){
   Serial.print("in");
   Serial.println();
 
-  if(irRead()){
+  /*if(!irRead()){
+    Serial.println("Hit tape");
     branchRight();
-  }
+  }*/
 
   if(frontDis <= 15){
     navigateRight();
   }
 
-  if(sideDis >= 20 && sideDis < 30){
+  if(sideDis >= 15 && sideDis < 30){
+    Serial.print("Side is: ");
+    Serial.println(sideDis);
     returnToWall();
   }
 
