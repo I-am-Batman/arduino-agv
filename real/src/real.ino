@@ -158,8 +158,30 @@ void returnToWall(){
 }
 
 void lightNav(){
-    rside.writeMicroseconds(STOP);
-    lside.writeMicroseconds(STOP);
+	while(lightR != lightR){
+		if(lightL > lightR){
+			lside.writeMicroseconds(BACKWARD);
+			rside.writeMicroseconds(FORWARD);
+			delay(15);
+			delay(100);
+			}
+		else{
+			lside.writeMicroseconds(FORWARD);
+			rside.writeMicroseconds(BACKWARD);
+			delay(15);
+			delay(100);
+			}
+		delay(15);
+		rside.writeMicroseconds(FORWARD);
+		lside.writeMicroseconds(FORWARD);
+		delay(15);
+		delay(200);
+	}
+	if(lightL < 70){
+		rside.writeMicroseconds(STOP);
+		lside.writeMicroseconds(STOP);
+		delay(15);
+	}      
     delay(15);
     while(true){}
 }
