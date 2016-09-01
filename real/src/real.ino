@@ -1,13 +1,13 @@
 #include <Arduino.h>
-
 #include <Servo.h>
 
 #define FORWARD 2000
 #define BACKWARD 1000
-#define STOP 1501
+#define STOP 1510
 
 Servo rside;
 Servo lside;
+int turn = 0;
 const int sideSwitch = 7;
 const int frontPing = 2;
 const int sidePing = 11;
@@ -49,7 +49,7 @@ void turnRight(){
   rside.writeMicroseconds(BACKWARD+400);
   lside.writeMicroseconds(FORWARD-400);
   delay(15);
-  delay(2025);
+  delay(2250);
   rside.writeMicroseconds(STOP);
   lside.writeMicroseconds(STOP);
   delay(15);
@@ -103,17 +103,14 @@ void rUTurn(){
 
 long ping(int pingPin){
   long duration, inches;
-
   pinMode(pingPin, OUTPUT);
   digitalWrite(pingPin, LOW);
   delayMicroseconds(2);
   digitalWrite(pingPin, HIGH);
   delayMicroseconds(5);
   digitalWrite(pingPin, LOW);
-
   pinMode(pingPin, INPUT);
   duration = pulseIn(pingPin, HIGH);
-
   inches = microsecondsToInches(duration);
   return inches;
 }
@@ -146,7 +143,25 @@ void returnToWall(){
   rside.writeMicroseconds(STOP);
   lside.writeMicroseconds(STOP);
   delay(15);
-  turnRight();
+  rside.writeMicroseconds(STOP);
+  lside.writeMicroseconds(STOP);
+  delay(15);
+  delay(1000);
+  rside.writeMicroseconds(BACKWARD+400);
+  lside.writeMicroseconds(FORWARD-400);
+  delay(15);
+  delay(1900);
+  rside.writeMicroseconds(STOP);
+  lside.writeMicroseconds(STOP);
+  delay(15);
+  delay(1000);
+}
+
+void lightNav(){
+    rside.writeMicroseconds(STOP);
+    lside.writeMicroseconds(STOP);
+    delay(15);
+    while(true){}
 }
 
 void loop(){
@@ -161,14 +176,26 @@ void loop(){
   Serial.print("in");
   Serial.println();
 
-  delay(100);
-
   if(frontDis <= 15){
     navigateRight();
     sideDis = ping(sidePing);
   }
 
-  if(sideDis >= 20 && sideDis < 60){
+  if(sideDis >= 20 && sideDis < 30){
     returnToWall();
+  }
+
+  if(sideDis >= 30){
+    delay(500);
+    turnLeft();
+    rside.writeMicroseconds(FORWARD-300);
+    lside.writeMicroseconds(FORWARD-300);
+    delay(15);
+    delay(700);
+    turn += 1;
+  }
+
+  if(turn == 2){
+    lightNav();
   }
 }
